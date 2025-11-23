@@ -1,17 +1,300 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <title>Vanilla JavaScript App</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Veterans Club</title>
+  <meta name="description" content="Veterans Club — honoring service, community, and country." />
+  <link rel="icon" href="data:," />
+  <style>
+    :root {
+      --blue: #0a3d62;
+      --red: #c0392b;
+      --white: #ffffff;
+      --text: #1f2937;
+      --shadow: rgba(0,0,0,0.15);
+    }
+
+    /* Patriotic flag background */
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(0deg, rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
+        url('https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/US_Flag_Icon.svg/1024px-US_Flag_Icon.svg.png');
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center;
+    }
+
+    /* Subtle overlay stripes for texture */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(192,57,43,0.08) 0px,
+          rgba(192,57,43,0.08) 16px,
+          rgba(10,61,98,0.08) 16px,
+          rgba(10,61,98,0.08) 32px
+        );
+      pointer-events: none;
+      mix-blend-mode: multiply;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1rem 4rem;
+    }
+
+    header {
+      background: rgba(10, 61, 98, 0.9);
+      color: var(--white);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      box-shadow: 0 10px 25px var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle waving flag effect bars */
+    header::after {
+      content: "";
+      position: absolute;
+      right: -60px;
+      top: -40px;
+      width: 200px;
+      height: 200px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), transparent 60%),
+        repeating-linear-gradient(
+          0deg,
+          var(--red),
+          var(--red) 10px,
+          var(--white) 10px,
+          var(--white) 20px
+        );
+      transform: rotate(20deg);
+      opacity: 0.3;
+    }
+
+    h1 {
+      margin: 0 0 0.25rem;
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+      letter-spacing: 0.5px;
+    }
+
+    .subtitle {
+      margin: 0.25rem 0 0;
+      font-size: 1rem;
+      opacity: 0.95;
+    }
+
+    .cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    button {
+      appearance: none;
+      border: none;
+      border-radius: 999px;
+      padding: 0.75rem 1.25rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+      box-shadow: 0 6px 16px var(--shadow);
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, var(--blue), #123e66);
+      color: var(--white);
+    }
+    .btn-primary:hover { transform: translateY(-1px); }
+
+    .btn-secondary {
+      background: linear-gradient(90deg, var(--red), #a33227);
+      color: var(--white);
+    }
+    .btn-secondary:hover { transform: translateY(-1px); }
+
+    main {
+      margin-top: 1.5rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px var(--shadow);
+      padding: 1.25rem;
+      display: none; /* hidden until toggled */
+    }
+
+    .card.active {
+      display: block;
+      animation: fadeIn 220ms ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card h2 {
+      margin-top: 0;
+      color: var(--blue);
+      font-size: 1.25rem;
+    }
+
+    .list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .list-item {
+      border: 1px solid rgba(31,41,55,0.12);
+      border-radius: 12px;
+      padding: 0.75rem;
+      background: #fff;
+    }
+
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      color: #3f4b5a;
+      font-size: 0.95rem;
+    }
+
+    .seal {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(10,61,98,0.08);
+      border: 1px solid rgba(10,61,98,0.15);
+    }
+
+    /* Accessibility and focus */
+    a, button { outline-offset: 3px; }
+    button:focus-visible {
+      outline: 3px solid #ffd166;
+      box-shadow: 0 0 0 6px rgba(255,209,102,0.25);
+    }
+
+    /* Responsive tweaks */
+    @media (min-width: 768px) {
+      .cta { gap: 1rem; }
+      button { padding: 0.9rem 1.4rem; }
+    }
+  </style>
 </head>
-
 <body>
-  <main>
-    <h1>Vanilla JavaScript App</h1>
-  </main>
-</body>
+  <div class="container">
+    <header role="banner">
+      <h1>Veterans Club</h1>
+      <p class="subtitle">Honoring service. Strengthening community. Celebrating country.</p>
+      <div class="cta" role="navigation" aria-label="Page actions">
+        <button class="btn-primary" id="toggleMembers" aria-controls="members" aria-expanded="false">
+          View Club Members
+        </button>
+        <button class="btn-secondary" id="toggleMission" aria-controls="mission" aria-expanded="false">
+          Read Mission Statement
+        </button>
+      </div>
+    </header>
 
+    <main id="content" role="main">
+      <!-- Members -->
+      <section class="card" id="members" aria-hidden="true">
+        <h2>Club members</h2>
+        <p>These are placeholder entries. Replace with your roster or connect to your data source.</p>
+        <div class="list" role="list">
+          <article class="list-item" role="listitem">
+            <strong>Alex Johnson</strong><br />
+            <small>U.S. Army — Sergeant</small><br />
+            <small>Community Outreach Chair</small>
+          </article>
+          <article class="list-item" role="listitem">
+            <strong>Maria Rodriguez</strong><br />
+            <small>U.S. Navy — Petty Officer</small><br />
+            <small>Events Coordinator</small>
+          </article>
+          <article class="list-item" role="listitem">
+            <strong>Sam Lee</strong><br />
+            <small>U.S. Air Force — Staff Sergeant</small><br />
+            <small>Treasurer</small>
+          </article>
+          <article class="list-item" role="listitem">
+            <strong>Patricia O’Neal</strong><br />
+            <small>U.S. Marine Corps — Corporal</small><br />
+            <small>Membership Lead</small>
+          </article>
+        </div>
+      </section>
+
+      <!-- Mission -->
+      <section class="card" id="mission" aria-hidden="true">
+        <h2>Mission statement</h2>
+        <p>
+          We are a community of veterans dedicated to service beyond our service. We honor the sacrifices
+          of those who served, support one another and our families, and strengthen our local community
+          through mentorship, volunteerism, and leadership. We uphold integrity, camaraderie, and patriotism
+          in all we do.
+        </p>
+      </section>
+    </main>
+
+    <footer role="contentinfo">
+      <div class="seal" aria-label="Patriotic seal">
+        <span>🇺🇸</span>
+        <span>United in service</span>
+      </div>
+      <div style="margin-top:0.75rem">
+        © <span id="year"></span> Veterans Club. All rights reserved.
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Simple toggle behavior for sections
+    const membersBtn = document.getElementById('toggleMembers');
+    const missionBtn = document.getElementById('toggleMission');
+    const membersCard = document.getElementById('members');
+    const missionCard = document.getElementById('mission');
+    const yearEl = document.getElementById('year');
+
+    yearEl.textContent = new Date().getFullYear();
+
+    function toggle(card, btn) {
+      const isActive = card.classList.contains('active');
+      // Hide both, then show selected if it was not active
+      [membersCard, missionCard].forEach(c => {
+        c.classList.remove('active');
+        c.setAttribute('aria-hidden', 'true');
+      });
+      [membersBtn, missionBtn].forEach(b => b.setAttribute('aria-expanded', 'false'));
+
+      if (!isActive) {
+        card.classList.add('active');
+        card.setAttribute('aria-hidden', 'false');
+        btn.setAttribute('aria-expanded', 'true');
+        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    membersBtn.addEventListener('click', () => toggle(membersCard, membersBtn));
+    missionBtn.addEventListener('click', () => toggle(missionCard, missionBtn));
+  </script>
+</body>
 </html>
