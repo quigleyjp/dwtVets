@@ -202,8 +202,9 @@
 <body>
   <div class="container">
     <header role="banner">
-      <h1>Veterans Club</h1>
-      <p class="subtitle">Honoring service. Strengthening community. Celebrating country.</p>
+      <h1>DWT Veterans Club</h1>
+      <p class="subtitle">Veterans in Del Webb Tradition</p>
+      <p class="subtitle">Port St Lucie Florida</p>
       <div class="cta" role="navigation" aria-label="Page actions">
         <button class="btn-primary" id="toggleMembers" aria-controls="members" aria-expanded="false">
           View Club Members
@@ -254,7 +255,7 @@
         </p>
       </section>
     </main>
-
+<!-- Footer 
     <footer role="contentinfo">
       <div class="seal" aria-label="Patriotic seal">
         <span>🇺🇸</span>
@@ -264,6 +265,7 @@
         © <span id="year"></span> Veterans Club. All rights reserved.
       </div>
     </footer>
+    -->
   </div>
 
   <script>
@@ -274,7 +276,7 @@
     const missionCard = document.getElementById('mission');
     const yearEl = document.getElementById('year');
 
-    yearEl.textContent = new Date().getFullYear();
+    // yearEl.textContent = new Date().getFullYear(); 
 
     function toggle(card, btn) {
       const isActive = card.classList.contains('active');
